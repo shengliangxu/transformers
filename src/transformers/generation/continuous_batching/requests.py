@@ -259,7 +259,9 @@ class RequestState:
         return GenerationOutput(
             request_id=self.request_id,
             prompt_ids=self.initial_tokens,
-            generated_tokens=self.generated_tokens,
+            # Need to make a copy here: the GenerationOutput.generated_tokens will be read by the request handndlig
+            # thread, and the RequestState.generated_tokens will be read/write by the generation thread
+            generated_tokens=self.generated_tokens.copy(),
             logprobs=[],
             error=self.error,
             status=self.status,
